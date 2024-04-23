@@ -1,6 +1,8 @@
 let gameState = {
   chickenLane: 0,
   carScreenTime: 1000,
+  carGenerationTime: 400,
+  carFrequency: 0.95,
   level: 'easy',
   isPlaying: true,
   isWaiting: false,
@@ -12,11 +14,20 @@ const objectState = {
   lanes: [],
 }
 
+setInterval(() => {
+  for (var i = 1; i <= 15; i++) {
+    if (i > gameState.chickenLane + 1) {
+      Math.random() >= gameState.carFrequency && genCar(i, Math.floor(Math.random() * 8) + 1);
+    }
+  }
+}, gameState.carGenerationTime)
+
 document.addEventListener("DOMContentLoaded", function () {
   objectState.chicken = document.getElementById("chicken");
   objectState.pipes = document.querySelectorAll(`[game-class="pipe"]`);
   objectState.lanes = document.querySelectorAll(`[game-class="lane"]`);
   moveChickenLane();
+  setLevel('easy');
   setActiveLane(1);
 });
 document.addEventListener("screenChange", function () {

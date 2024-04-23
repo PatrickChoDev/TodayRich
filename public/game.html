@@ -145,10 +145,14 @@
       <div class="section-controller">
         <label for="bet-level">Diffuculty</label>
         <div id="bet-level" class="btn-group">
-          <btn class="btn btn-secondary btn-level" selected="true" id="btn-bet">Easy</btn>
-          <btn class="btn btn-secondary btn-level" id="btn-bet">Medium</btn>
-          <btn class="btn btn-secondary btn-level" id="btn-bet">Hard</btn>
-          <btn class="btn btn-secondary btn-level" id="btn-bet">Evil</btn>
+          <btn class="btn btn-secondary btn-level" onclick="handleLevelChange(this)" value="easy" id="btn-bet">Easy
+          </btn>
+          <btn class="btn btn-secondary btn-level" onclick="handleLevelChange(this)" value="medium" id="btn-bet">Medium
+          </btn>
+          <btn class="btn btn-secondary btn-level" onclick="handleLevelChange(this)" value="hard" id="btn-bet">Hard
+          </btn>
+          <btn class="btn btn-secondary btn-level" onclick="handleLevelChange(this)" value="daredevil" id="btn-bet">Evil
+          </btn>
         </div>
       </div>
       <div class="section-controller">

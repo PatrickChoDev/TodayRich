@@ -73,3 +73,35 @@ function transformXGameView() {
     }
   }, 350) // 300ms is the time it takes for the chicken to move to the next lane + 50 ms for refinement / js delay
 }
+
+function handleLevelChange(element) {
+  const level = element.getAttribute("value");
+  gameState.level = level;
+  setLevel(level);
+}
+
+function setLevel(level) {
+  if (level === "easy") {
+    gameState.carScreenTime = 1000;
+    gameState.carGenerationTime = 400;
+    gameState.carFrequency = 0.95;
+  } else if (level === "medium") {
+    gameState.carScreenTime = 800;
+    gameState.carGenerationTime = 300;
+    gameState.carFrequency = 0.9;
+  } else if (level === "hard") {
+    gameState.carScreenTime = 600;
+    gameState.carGenerationTime = 200;
+    gameState.carFrequency = 0.85;
+  } else if (level === "daredevil") {
+    gameState.carScreenTime = 600;
+    gameState.carGenerationTime = 100;
+    gameState.carFrequency = 0.7;
+  }
+
+  document.querySelectorAll("#btn-bet").forEach((e) => {
+    if (e.getAttribute("value") !== level) e.removeAttribute("selected");
+    else e.setAttribute("selected", "true");
+  })
+
+}
