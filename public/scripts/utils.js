@@ -105,3 +105,41 @@ function setLevel(level) {
   })
 
 }
+
+async function loadGame() {
+  const response = await fetch('/api/game', { method: "GET", credentials: true })
+  console.log(await response.json())
+}
+
+async function handleStartBet() {
+  const bet = document.getElementById("bet").value;
+  if (parseFloat(bet) <= 0) {
+    alert("Please enter a valid bet amount");
+    return;
+  }
+  const response = await fetch('/api/game/start', {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ bet: parseFloat(bet), level: gameState.level })
+  })
+  console.log(await response.json())
+
+  const startBetButton = document.getElementById("btn-start");
+  startBetButton.style.display = "none";
+  const stopBetButton = document.getElementById("btn-stop");
+  stopBetButton.style.display = "block";
+  gameState.isPlaying = true;
+}
+
+async function handleStopBet() {
+  const response = await fetch('/api/game/stop', { method: "POST" })
+  console.log(await response.json())
+
+  const startBetButton = document.getElementById("btn-start");
+  startBetButton.style.display = "block";
+  const stopBetButton = document.getElementById("btn-stop");
+  stopBetButton.style.display = "none";
+  gameState.isPlaying = false;
+}
