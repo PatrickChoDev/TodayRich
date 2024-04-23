@@ -2,11 +2,11 @@
 function alert(message) {
   const alertElement = document.getElementById('error-message');
   alertElement.innerHTML = message;
-  console.log(message)
+  // console.log(message)
   alertElement.style.display = 'block';
 }
 
-async function handleFormSubmit() {
+async function handleRegisterSubmit() {
 
   // Get form elements
   const form = document.getElementById('register-form');
@@ -48,13 +48,64 @@ async function handleFormSubmit() {
 
     responseJSON = await response.json()
 
-    console.log(responseJSON)
+    // console.log(responseJSON)
+
+    if (responseJSON.success) {
+      // Redirect to login page
+        // console.log(responseJSON)
+        window.location.replace('/game');
+    } else {
+      alert(responseJSON.error)
+    }
+  } catch (error) {
+    alert(error);
+  }
+}
+
+async function handleLoginSubmit() {
+
+  // Get form elements
+  const form = document.getElementById('register-form');
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+
+  // Retrieve values from form inputs
+  const username = usernameInput.value;
+  const password = passwordInput.value;
+
+  // Perform validation
+  if (username.trim() === '') {
+      alert('Please enter a username');
+      return;
+  }
+
+  if (password.trim() === '') {
+      alert('Please enter a password');
+      return;
+  }
+
+  try {
+    // Send POST request to /register endpoint
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username, password })
+    });
+
+
+    responseJSON = await response.json()
+
+    // console.log(responseJSON)
 
     if (responseJSON.success) {
       // Redirect to login page
         console.log(responseJSON)
         window.location.replace('/game');
-    } 
+    } else {
+      alert(responseJSON.error)
+    }
   } catch (error) {
     alert(error);
   }
