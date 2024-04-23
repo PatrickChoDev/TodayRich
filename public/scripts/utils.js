@@ -74,12 +74,12 @@ function transformXGameView() {
     ) {
       adjustViewTransform(
         -150 -
-          Math.max(
-            0,
-            chicken.getBoundingClientRect().x -
-              gameContainer.getBoundingClientRect().width / 4 -
-              150,
-          ),
+        Math.max(
+          0,
+          chicken.getBoundingClientRect().x -
+          gameContainer.getBoundingClientRect().width / 4 -
+          150,
+        ),
       );
       setViewTransform(Math.min(0, getViewTransform()));
       gameView.style.transform = `translateX(${Math.max(gameContainer.getBoundingClientRect().width - gameView.getBoundingClientRect().width, getViewTransform())}px)`;
@@ -229,7 +229,14 @@ async function handleStopBet() {
   gameState.isPlaying = false;
 }
 
-function handleLogout() {
-  document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  location.reload();
+async function handleLogout() {
+  const response = await fetch("/api/logout", {
+    method: "GET",
+    credentials: "same-origin",
+  });
+  if (response.status === 200) {
+    location.reload();
+  } else {
+    alert("Failed to logout");
+  }
 }
