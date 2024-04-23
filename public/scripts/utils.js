@@ -103,11 +103,40 @@ function setLevel(level) {
     if (e.getAttribute("value") !== level) e.removeAttribute("selected");
     else e.setAttribute("selected", "true");
   })
+}
+
+async function loadProfile() {
+  const response = await fetch('/api/me', { method: "GET", credentials: true })
+  if (response.status === 200) {
+    const data = await response.json();
+    document.getElementById("balance").innerText = data.balance;
+  } else if (response.status === 401) {
+    window.location.replace("/login");
+  }
 
 }
 
 async function loadGame() {
   const response = await fetch('/api/game', { method: "GET", credentials: true })
+  if (response.status === 200) {
+    const data = await response.json();
+    gameState = data.gameState;
+    objectState = data.objectState;
+    setLevel(gameState.level);
+    setActiveLane(gameState.chickenLane + 1);
+    transformXGameView();
+  } else if (response.status === 401) {
+    window.location.replace("/login");
+  }
+}
+
+async function handleMoveBet() {
+  const response = await fetch('/api/game/spin', {
+    method: "GET",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  })
   console.log(await response.json())
 }
 

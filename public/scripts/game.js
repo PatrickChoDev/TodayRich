@@ -8,6 +8,12 @@ let gameState = {
   isWaiting: false,
 }
 
+let userState = {
+  balance: 0,
+  username: null,
+  loggedIn: false,
+}
+
 const objectState = {
   chicken: null,
   pipes: [],
