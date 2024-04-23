@@ -14,7 +14,7 @@ const app = express();
 app.use(
   express.static("public", {
     extensions: ["html", "htm"],
-    index: "index.html",
+    index: "game.html",
   }),
 );
 

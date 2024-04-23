@@ -29,6 +29,7 @@ setInterval(() => {
 }, gameState.carGenerationTime)
 
 document.addEventListener("DOMContentLoaded", function () {
+  if (window.location.pathname != "/game") window.location.replace('/game')
   objectState.chicken = document.getElementById("chicken");
   objectState.pipes = document.querySelectorAll(`[game-class="pipe"]`);
   objectState.lanes = document.querySelectorAll(`[game-class="lane"]`);
