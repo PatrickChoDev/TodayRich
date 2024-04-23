@@ -60,8 +60,14 @@ header {
   align-items: center;
   display: flex;
   flex-direction: row;
-  height: 10dvh;
-  max-height: 10dvh;
+  height: 12vh;
+}
+
+@media (max-width: 768px) {
+  header {
+    height: 8vh;
+    max-height: 8vh;
+  }
 }
 
 header div.title-container h1.title {
@@ -117,7 +123,8 @@ main {
   margin: 10px 14px 16px;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  min-height: 80vh;
+  height: -webkit-fill-available;
   max-height: 90vh;
 }
 
@@ -214,6 +221,13 @@ main section.bet-control div.section-controller div#bet img#bet-icon {
 
 .btn-bet {
   margin: 10px;
+}
+
+@media (max-height: 700px) {
+  main section#game-container {
+    height: 40vh;
+    overflow: scroll;
+  }
 }
 
 @media (max-width: 768px) {

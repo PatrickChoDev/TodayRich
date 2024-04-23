@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
   setActiveLane(1);
   loadProfile();
   loadGame();
+  window.scrollTo(0, 1);
   setTimeout(() => {
     loadProfile();
   }, 10000);
