@@ -55,6 +55,7 @@ main section#register-container form input {
   color: #fff;
 }
 
-.no-stroke {
-  -webkit-text-stroke: none !important;
+#error-message {
+  color: red;
+  font-size: small;
 }
