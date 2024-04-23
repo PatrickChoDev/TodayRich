@@ -158,7 +158,15 @@ async function handleStartBet() {
     },
     body: JSON.stringify({ bet: parseFloat(bet), level: gameState.level })
   })
-  console.log(await response.json())
+
+  const data = await response.json();
+  if (response.status === 400) {
+    alert(data.error);
+    return;
+  } else if (response.status === 401) {
+    window.location.replace("/login");
+    return;
+  }
 
   const startBetButton = document.getElementById("btn-start");
   startBetButton.style.display = "none";
@@ -169,7 +177,14 @@ async function handleStartBet() {
 
 async function handleStopBet() {
   const response = await fetch('/api/game/stop', { method: "POST" })
-  console.log(await response.json())
+  const data = await response.json();
+  if (response.status === 400) {
+    alert(data.error);
+    return;
+  } else if (response.status === 401) {
+    window.location.replace("/login");
+    return;
+  }
 
   const startBetButton = document.getElementById("btn-start");
   startBetButton.style.display = "block";
