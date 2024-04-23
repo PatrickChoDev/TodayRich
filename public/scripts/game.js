@@ -1,7 +1,9 @@
 let gameState = {
   chickenLane: 0,
-  carScreenTime: 1500,
-  level: 'easy'
+  carScreenTime: 1000,
+  level: 'easy',
+  isPlaying: true,
+  isWaiting: false,
 }
 
 const objectState = {
@@ -16,6 +18,9 @@ document.addEventListener("DOMContentLoaded", function () {
   objectState.lanes = document.querySelectorAll(`[game-class="lane"]`);
   moveChickenLane();
   setActiveLane(1);
+});
+document.addEventListener("screenChange", function () {
+  transformXGameView();
 });
 
 function moveChickenLane() {
@@ -36,21 +41,22 @@ function moveChickenLane() {
     objectState.chicken.style.transition = "transform cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s";
   }, 300)
 
-  setTimeout(() => setDead(false), 400);
+  setTimeout(() => setDead(gameState.chickenLane === 3), 400);
 
   setActiveLane(gameState.chickenLane + 1);
   transformXGameView()
 }
 
 function moveToNextPipe() {
+  if (!gameState.isPlaying || gameState.isWaiting) return;
   gameState.chickenLane += 1;
+  gameState.isWaiting = true;
   moveChickenLane();
 }
 
 function genCar(lane, numCar) {
   const car = document.querySelector(`[lane="${lane}"] [game-class="car-wrapper"]`);
-  car.getBoundingClientRect();
-
+  car.style.display = "flex";
   const newCarImage = document.createElement('img');
   newCarImage.setAttribute('src', `/assets/cars/car${numCar}.svg`);
   newCarImage.setAttribute('game-class', 'car');
@@ -75,8 +81,16 @@ function setDead(dead) {
   lane.querySelector(`[game-class="pipe"]`).style.display = "none";
   lane.querySelector(`[game-class="mul-text"]`).style.display = "none";
   if (dead == true) {
-    //genCar
-
+    genCar(gameState.chickenLane, Math.floor(Math.random() * 8) + 1);
+    setTimeout(() => {
+      objectState.chicken.src = '/assets/images/chicken-dead.svg';
+      const feather = document.createElement('img');
+      feather.setAttribute('src', '/assets/images/chicken-dead-feather.svg');
+      feather.setAttribute('game-class', 'feather');
+      objectState.chicken.parentNode.appendChild(feather);
+      gameState.isPlaying = false;
+      gameState.isWaiting = false;
+    }, gameState.carScreenTime / 2);
   } else {
     if (lane) {
       const blockerCrack = document.createElement('img');
@@ -108,19 +122,15 @@ function setDead(dead) {
         fill: 'forwards',
       }
       );
-      if (gameState.chickenLane - 1 > 0) {
-        // let coin = `
-        //   <img class="coin" src="/assets/images/coin.svg" />
-        //   `
-        // lane.innerHTML += coin;
-        const previousLane = document.querySelector(`div.item[game-class="lane"][lane="${gameState.chickenLane - 1}"]`);
-        const coin = document.createElement('img');
-        coin.setAttribute('src', '/assets/images/coin.svg');
-        coin.setAttribute('game-class', 'coin');
-        coin.classList.add('coin');
-        previousLane.appendChild(coin);
-      }
+      gameState.isWaiting = false;
     }
-
+  }
+  if (gameState.chickenLane - 1 > 0) {
+    const previousLane = document.querySelector(`div.item[game-class="lane"][lane="${gameState.chickenLane - 1}"]`);
+    const coin = document.createElement('img');
+    coin.setAttribute('src', '/assets/images/coin.svg');
+    coin.setAttribute('game-class', 'coin');
+    coin.classList.add('coin');
+    previousLane.appendChild(coin);
   }
 }

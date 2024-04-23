@@ -142,14 +142,14 @@
   text-align: center;
   align-items: center;
   justify-content: center;
-  display: flex;
-  z-index: -1;
+  display: none;
+  z-index: 200;
 }
 
 .game-container div.lanes div.car img[game-class="car"] {
   position: absolute;
-  z-index: 99;
   width: 100px;
+  opacity: 1;
 }
 
 .game-container .coin {
@@ -187,4 +187,9 @@
   position: absolute;
   transform: translateY(-70px);
   z-index: 101;
+}
+
+.game-container img[game-class="feather"] {
+  position: absolute;
+  transform: translateY(-70px);
 }
