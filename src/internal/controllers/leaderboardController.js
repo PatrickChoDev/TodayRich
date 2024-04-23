@@ -50,26 +50,22 @@ export const getLeaderboard = async (req, res) => {
     }
 
     if (user && index >= 0) {
-      return res
-        .status(200)
-        .json({
-          success: true,
-          name: user.name,
-          rank: index + 1,
-          count: results.length,
-          pagination,
-          leaderboard: results,
-        });
-    }
-
-    res
-      .status(200)
-      .json({
+      return res.status(200).json({
         success: true,
+        name: user.name,
+        rank: index + 1,
         count: results.length,
         pagination,
         leaderboard: results,
       });
+    }
+
+    res.status(200).json({
+      success: true,
+      count: results.length,
+      pagination,
+      leaderboard: results,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error" });
