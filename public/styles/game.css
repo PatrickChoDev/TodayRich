@@ -46,11 +46,13 @@
   right: 0;
   min-width: 4px;
   background-color: white;
-  background-image: repeating-linear-gradient(180deg,
-      #fff,
-      #fff 18px,
-      #313463 18px,
-      #313463 36px);
+  background-image: repeating-linear-gradient(
+    180deg,
+    #fff,
+    #fff 18px,
+    #313463 18px,
+    #313463 36px
+  );
 }
 
 .game-container div.lanes [game-class="mul-text"] {

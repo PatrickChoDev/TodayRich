@@ -5,6 +5,7 @@
     <title>TodayRich - Register</title>
     <link rel="stylesheet" href="/styles/base.css" />
     <link rel="stylesheet" href="/styles/style.css" />
+    <link rel="stylesheet" href="/styles/fonts.css" />
     <link rel="stylesheet" href="/styles/register.css" />
     <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico" />
   </head>
@@ -27,7 +28,6 @@
     <main>
       <section id="register-container" class="container">
         <h2 class="title">Create your account</h2>
-       
         <form id="register-form" class="form">
           <div class="form-group">
             <label for="username">Username</label>
@@ -39,14 +39,25 @@
           </div>
           <div class="form-group">
             <label for="confirm-password">Confirm Password</label>
-            <input type="password" id="confirm-password" name="confirm-password" />
+            <input
+              type="password"
+              id="confirm-password"
+              name="confirm-password"
+            />
           </div>
           <div class="form-group">
-            <btn class="btn btn-primary" type="submit"> Register </btn>
+            <button class="btn btn-primary no-stroke" type="submit">
+              Register, and get Rich!
+            </button>
+            <button
+              class="btn btn-secondary"
+              onclick="window.location.replace('/login')"
+            >
+              Have an account? Login Here!
+            </button>
           </div>
         </form>
       </section>
     </main>
   </body>
-
 </html>

@@ -116,12 +116,10 @@ export const playGame = async (req, res) => {
     game.score += game.bet * game.multiplier * game.step;
 
     await game.save(); // Game continues
-    res
-      .status(200)
-      .json({
-        success: true,
-        game: { step: game.step, score: game.score, ended: false },
-      });
+    res.status(200).json({
+      success: true,
+      game: { step: game.step, score: game.score, ended: false },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error" });
@@ -175,16 +173,14 @@ export const loadGame = async (req, res) => {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        gameID: game._id,
-        step: game.step,
-        level: game.level,
-        bet: game.bet,
-        multiplier: game.multiplier,
-      });
+    res.status(200).json({
+      success: true,
+      gameID: game._id,
+      step: game.step,
+      level: game.level,
+      bet: game.bet,
+      multiplier: game.multiplier,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error" });
