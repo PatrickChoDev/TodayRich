@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
-import { hashPassword, comparePasswords } from '../../utils/passwordUtil.js';
-import { sign } from '../../utils/tokenUtil.js';
+import mongoose from "mongoose";
+import { hashPassword, comparePasswords } from "../../utils/passwordUtil.js";
+import { sign } from "../../utils/tokenUtil.js";
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -10,8 +10,8 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'admin'],
-    default: 'user',
+    enum: ["user", "admin"],
+    default: "user",
   },
   password: {
     type: String,
@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema({
   },
   money: {
     type: mongoose.SchemaTypes.Number,
-    default: 100.00,
+    default: 100.0,
   },
   createdAt: {
     type: Date,
@@ -33,13 +33,14 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-UserSchema.pre('save', async function (next) {
-  if (this.password) this.password = await new Promise((resolve, reject) => {
-    hashPassword(this.password, 16, (err, hash) => {
-      if (err) return reject(err);
-      resolve(hash);
+UserSchema.pre("save", async function (next) {
+  if (this.password)
+    this.password = await new Promise((resolve, reject) => {
+      hashPassword(this.password, 16, (err, hash) => {
+        if (err) return reject(err);
+        resolve(hash);
+      });
     });
-  });
 });
 
 UserSchema.methods.matchPassword = async function (password) {
@@ -57,4 +58,4 @@ UserSchema.methods.getSignedToken = function () {
   });
 };
 
-export const User = mongoose.model('User', UserSchema);
+export const User = mongoose.model("User", UserSchema);

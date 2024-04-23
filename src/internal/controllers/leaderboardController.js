@@ -1,17 +1,16 @@
 import { User } from "../models/userModel.js";
 
 export const getLeaderboard = async (req, res) => {
-
-  if (req.params.type != 'bestScore' && req.params.type != 'money') {
-    return res.status(400).json({ error: 'Invalid leaderboard type' });
+  if (req.params.type != "bestScore" && req.params.type != "money") {
+    return res.status(400).json({ error: "Invalid leaderboard type" });
   }
 
-  const type = req.params.type === 'bestScore' ? 'bestScore' : 'money';
+  const type = req.params.type === "bestScore" ? "bestScore" : "money";
 
   try {
     let query;
 
-    query = User.find().select('name ' + type)
+    query = User.find().select("name " + type);
 
     let user, index;
     if (req.query.user) {
@@ -21,7 +20,7 @@ export const getLeaderboard = async (req, res) => {
 
     let sort = -1;
     if (req.query.sort) {
-      const sort = req.query.sort === 'asc' ? 1 : -1;
+      const sort = req.query.sort === "asc" ? 1 : -1;
     }
     query = query.sort({ [type]: sort });
 
@@ -51,12 +50,28 @@ export const getLeaderboard = async (req, res) => {
     }
 
     if (user && index >= 0) {
-      return res.status(200).json({ success: true, name: user.name, rank: index + 1, count: results.length, pagination, leaderboard: results });
+      return res
+        .status(200)
+        .json({
+          success: true,
+          name: user.name,
+          rank: index + 1,
+          count: results.length,
+          pagination,
+          leaderboard: results,
+        });
     }
 
-    res.status(200).json({ success: true, count: results.length, pagination, leaderboard: results });
+    res
+      .status(200)
+      .json({
+        success: true,
+        count: results.length,
+        pagination,
+        leaderboard: results,
+      });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json({ error: "Server error" });
   }
-}
+};

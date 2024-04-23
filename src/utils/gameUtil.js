@@ -5,4 +5,4 @@ export const levelMultiplier = {
   daredevil: 0.2,
 };
 
-export const validLevels = ['easy', 'medium', 'hard', 'daredevil'];
+export const validLevels = ["easy", "medium", "hard", "daredevil"];

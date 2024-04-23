@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const GameHistorySchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
     required: true,
   },
   score: {
@@ -20,7 +20,7 @@ const GameHistorySchema = new mongoose.Schema({
   },
   level: {
     type: String,
-    enum: ['easy', 'medium', 'hard', 'daredevil'],
+    enum: ["easy", "medium", "hard", "daredevil"],
     required: true,
   },
   won: {
@@ -50,9 +50,9 @@ const GameHistorySchema = new mongoose.Schema({
   },
 });
 
-GameHistorySchema.pre('save', (next) => {
+GameHistorySchema.pre("save", (next) => {
   if (this) this.updatedAt = Date.now();
   next();
 });
 
-export const GameHistory = mongoose.model('GameHistory', GameHistorySchema);
+export const GameHistory = mongoose.model("GameHistory", GameHistorySchema);

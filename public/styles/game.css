@@ -1,13 +1,17 @@
 .game-container {
   position: relative;
   transition: transform cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s;
-  transform: translateX(calc(-120px * 0));
   display: flex;
   height: 100%;
-  background-color: #0CA783;
+  background-color: #0ca783;
   min-width: fit-content;
   overflow: hidden;
   transition: all 0.4s ease 0s;
+}
+
+.game-container #view {
+  --viewTransform: 0px;
+  transition: transform cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s;
 }
 
 .game-container div.lanes {
@@ -15,28 +19,23 @@
   height: 100%;
   width: 100%;
   position: relative;
-
 }
 
 .game-container div.lanes .item:nth-child(odd) {
   min-width: 150px;
-  background-color: #36344e;
+  background-color: #313463;
   display: flex;
   justify-content: center;
-  /* Center the image horizontally */
   align-items: center;
-  /* Center the image vertically */
   position: relative;
 }
 
 .game-container div.lanes .item:nth-child(even) {
   min-width: 150px;
-  background-color: #262541;
+  background-color: #313463;
   display: flex;
   justify-content: center;
-  /* Center the image horizontally */
   align-items: center;
-  /* Center the image vertically */
   position: relative;
 }
 
@@ -49,19 +48,35 @@
   background-color: white;
   background-image: repeating-linear-gradient(180deg,
       #fff,
-      #fff 20px,
-      #262541 20px,
-      #262541 40px);
+      #fff 18px,
+      #313463 18px,
+      #313463 36px);
 }
 
-.game-container div.lanes .mul {
+.game-container div.lanes [game-class="mul-text"] {
   position: absolute;
   color: white;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
 }
 
-main section div.game-container .home {
+.game-container div.lanes img[game-class="pipe"] {
+  opacity: 0.5;
+}
+
+.game-container div.lanes img[game-class="pipe"][active="true"]:hover {
+  opacity: 1;
+}
+
+.game-container div.lanes img[game-class="pipe"][active="true"] {
+  cursor: pointer;
+}
+
+.game-container div.lanes img[game-class="mul-text"][active="true"] {
+  cursor: pointer;
+}
+
+.game-container .home {
   width: 180px;
   height: 100%;
   display: flex;
@@ -74,32 +89,107 @@ main section div.game-container .home {
   transform: rotateY(180deg);
   pointer-events: none;
   user-select: none;
-  background-image: url('../assets/images/sideway.png');
+  background-image: url("../assets/images/sideway.png");
 }
 
-main section div.game-container .home img {
+.game-container .home img {
   transform: rotateY(180deg);
+  position: absolute;
 }
 
-.grass2 {
-  background-color: #0CA783;
+.game-container .end {
+  width: 180px;
+  height: 100%;
   display: flex;
-  justify-content: center;
-  /* Center the image horizontally */
+  -webkit-box-align: center;
   align-items: center;
-  /* Center the image vertically */
-  background-image: linear-gradient(to right,
-      #b5b1b7,
-      #b5b1b7 100px,
-      #0CA783 20px,
-      #0CA783 100px);
+  position: relative;
+  background-position: left center;
+  background-repeat: repeat-y;
+  flex-shrink: 0;
+  pointer-events: none;
+  user-select: none;
+  background-image: url("../assets/images/sideway.png");
 }
 
-.chicken {
+.game-container .end img {
+  position: absolute;
+}
+
+.game-container .end img:nth-child(1) {
+  left: 92px;
+}
+
+.game-container .end img:nth-child(2) {
+  left: 7px;
+  z-index: 1;
+}
+
+#chicken {
   height: 100px;
   width: auto;
   position: absolute;
   top: calc(50% - 50px);
-  z-index: 99;
+  z-index: 50;
+  opacity: 1;
   transition: transform cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s;
+}
+
+.game-container div.lanes div.car {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  display: none;
+  z-index: 200;
+}
+
+.game-container div.lanes div.car img[game-class="car"] {
+  position: absolute;
+  width: 100px;
+  opacity: 1;
+}
+
+.game-container .coin {
+  position: relative;
+  opacity: 0;
+  transform: translateY(0%) rotateY(180deg) scale(0.5) translateZ(0px);
+  animation: stepClaimed 0.4s ease-out 0s 1 normal forwards running;
+  z-index: 102;
+}
+
+@keyframes stepClaimed {
+  0% {
+    opacity: 0;
+    transform: translateY(0%) rotateY(180deg) scale(0.5) translateZ(0px);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-50%) rotateY(90deg) scale(1) translateZ(0px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0%) rotateY(0deg) scale(1) translateZ(0px);
+  }
+}
+
+.game-container img[game-class="blocker-crack"] {
+  position: absolute;
+  transform: translateY(-60px);
+  z-index: 2;
+}
+
+.game-container img[game-class="blocker"] {
+  position: absolute;
+  transform: translateY(-70px);
+  z-index: 101;
+}
+
+.game-container img[game-class="feather"] {
+  position: absolute;
+  transform: translateY(-70px);
 }
