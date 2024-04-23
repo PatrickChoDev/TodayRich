@@ -60,6 +60,13 @@ main section.container form.form input {
   height: 44px;
 }
 
+#error-message {
+  color: #ff0033;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+}
+
 @media (min-width: 768px) {
   main {
     display: flex;
