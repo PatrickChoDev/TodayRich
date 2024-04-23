@@ -35,6 +35,11 @@ document.addEventListener("DOMContentLoaded", function () {
   moveChickenLane();
   setLevel('easy');
   setActiveLane(1);
+  loadProfile();
+  loadGame();
+  setTimeout(() => {
+    loadProfile();
+  }, 10000);
 });
 document.addEventListener("screenChange", function () {
   transformXGameView();

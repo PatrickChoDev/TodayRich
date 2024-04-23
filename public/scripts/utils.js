@@ -106,18 +106,25 @@ function setLevel(level) {
 }
 
 async function loadProfile() {
-  const response = await fetch('/api/me', { method: "GET", credentials: true })
+  const response = await fetch('/api/me', { method: "GET", credentials: "same-origin", })
   if (response.status === 200) {
     const data = await response.json();
-    document.getElementById("balance").innerText = data.balance;
-  } else if (response.status === 401) {
-    window.location.replace("/login");
+    userState.balance = data.balance;
+    userState.username = data.username;
+    userState.loggedIn = true;
+    document.querySelector(`header div.user-action div[login="true"] p#username`).innerText = userState.username;
+    document.querySelector(`header div.user-action div[login="true"] p#balance`).innerText = userState.balance;
+    document.querySelector(`header div.user-action div[login="true"]`).style.display = "flex";
+    document.querySelector(`header div.user-action div[login="false"]`).style.display = "true";
+  } else {
+    userState.loggedIn = false;
+    document.querySelector(`header div.user-action div[login="false"]`).style.display = "flex";
+    document.querySelector(`header div.user-action div[login="true"]`).style.display = "none";
   }
-
 }
 
 async function loadGame() {
-  const response = await fetch('/api/game', { method: "GET", credentials: true })
+  const response = await fetch('/api/game', { method: "GET", credentials: "same-origin", })
   if (response.status === 200) {
     const data = await response.json();
     gameState = data.gameState;
@@ -125,8 +132,6 @@ async function loadGame() {
     setLevel(gameState.level);
     setActiveLane(gameState.chickenLane + 1);
     transformXGameView();
-  } else if (response.status === 401) {
-    window.location.replace("/login");
   }
 }
 
@@ -171,4 +176,9 @@ async function handleStopBet() {
   const stopBetButton = document.getElementById("btn-stop");
   stopBetButton.style.display = "none";
   gameState.isPlaying = false;
+}
+
+function handleLogout() {
+  document.cookie = "session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  location.reload();
 }

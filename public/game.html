@@ -19,9 +19,16 @@
       <h1 class="title">TodayRich</h1>
     </div>
     <div class="user-action">
-      <div class="container">
+      <div login="false" style="display: flex;" class="container">
         <btn class="btn btn-secondary"><a href="/login"> Login </a></btn>
         <btn class="btn btn-primary"><a href="/register"> Register </a></btn>
+      </div>
+      <div login="true" style="display: none; flex-direction: row;">
+        <p id="username">HIHI</p>
+        <p id="balance">$0.00</p>
+        <div class="container">
+          <btn class="btn btn-secondary" onclick="handleLogout()">Logout</btn>
+        </div>
       </div>
     </div>
   </header>
