@@ -35,8 +35,8 @@
         <div class="lanes">
           <div class="item" game-class="lane" lane="1">
             <div class="line" game-class="line"></div>
-            <div class="car" game-class="car-wrapper"></div>
             <p class="mul" game-class="mul-text">x1.00</p>
+            <div class="car" game-class="car-wrapper"></div>
             <img src="/assets/images/pipe.svg" class="pipe" game-class="pipe" />
             <img id="chicken" class="chicken" style="transform: translateX(-124px);" src="/assets/images/chicken.svg" />
           </div>
@@ -145,15 +145,22 @@
       <div class="section-controller">
         <label for="bet-level">Diffuculty</label>
         <div id="bet-level" class="btn-group">
-          <btn class="btn btn-secondary btn-level" selected="true" id="btn-bet">Easy</btn>
-          <btn class="btn btn-secondary btn-level" id="btn-bet">Medium</btn>
-          <btn class="btn btn-secondary btn-level" id="btn-bet">Hard</btn>
-          <btn class="btn btn-secondary btn-level" id="btn-bet">Evil</btn>
+          <btn class="btn btn-secondary btn-level" onclick="handleLevelChange(this)" value="easy" id="btn-bet">Easy
+          </btn>
+          <btn class="btn btn-secondary btn-level" onclick="handleLevelChange(this)" value="medium" id="btn-bet">Medium
+          </btn>
+          <btn class="btn btn-secondary btn-level" onclick="handleLevelChange(this)" value="hard" id="btn-bet">Hard
+          </btn>
+          <btn class="btn btn-secondary btn-level" onclick="handleLevelChange(this)" value="daredevil" id="btn-bet">Evil
+          </btn>
         </div>
       </div>
       <div class="section-controller">
         <label for="btn-bet">Let's roll</label>
-        <btn class="btn btn-primary btn-bet" id="btn-bet">Start bet</btn>
+        <btn class="btn btn-primary btn-bet" style="display: block;" onclick="handleStartBet()" id="btn-start">Start bet
+        </btn>
+        <btn class="btn btn-primary btn-bet" style="display: none;" onclick="handleStopBet()" id="btn-start">Cash Out
+        </btn>
       </div>
     </section>
   </main>
