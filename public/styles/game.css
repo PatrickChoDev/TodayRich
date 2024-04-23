@@ -45,13 +45,11 @@
   right: 0;
   min-width: 4px;
   background-color: white;
-  background-image: repeating-linear-gradient(
-    180deg,
-    #fff,
-    #fff 18px,
-    #313463 18px,
-    #313463 36px
-  );
+  background-image: repeating-linear-gradient(180deg,
+      #fff,
+      #fff 18px,
+      #313463 18px,
+      #313463 36px);
 }
 
 .game-container div.lanes .mul {
@@ -65,7 +63,7 @@
   opacity: 0.5;
 }
 
-main section div.game-container .home {
+.game-container .home {
   width: 180px;
   height: 100%;
   display: flex;
@@ -81,24 +79,37 @@ main section div.game-container .home {
   background-image: url("../assets/images/sideway.png");
 }
 
-main section div.game-container .home img {
+.game-container .home img {
   transform: rotateY(180deg);
+  position: absolute;
 }
 
-.grass2 {
-  background-color: #0ca783;
+.game-container .end {
+  width: 180px;
+  height: 100%;
   display: flex;
-  justify-content: center;
-  /* Center the image horizontally */
+  -webkit-box-align: center;
   align-items: center;
-  /* Center the image vertically */
-  background-image: linear-gradient(
-    to right,
-    #b5b1b7,
-    #b5b1b7 100px,
-    #0ca783 20px,
-    #0ca783 100px
-  );
+  position: relative;
+  background-position: left center;
+  background-repeat: repeat-y;
+  flex-shrink: 0;
+  pointer-events: none;
+  user-select: none;
+  background-image: url("../assets/images/sideway.png");
+}
+
+.game-container .end img {
+  position: absolute;
+}
+
+.game-container .end img:nth-child(1) {
+  left: 92px;
+}
+
+.game-container .end img:nth-child(2) {
+  left: 7px;
+  z-index: 1;
 }
 
 .chicken {
@@ -107,5 +118,6 @@ main section div.game-container .home img {
   position: absolute;
   top: calc(50% - 50px);
   z-index: 99;
+  /* transform: translateX(88px); */
   transition: transform cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s;
 }

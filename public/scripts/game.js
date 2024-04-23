@@ -1,13 +1,8 @@
-function handleBetInput(event) {
-  if (event.key === "-" || event.key === "+" || event.key === "e") {
-    event.preventDefault();
-  }
+let gameState = {
+  chickenLane: 0,
+}
 
-  if (event.key === "." && event.target.value.includes(".")) {
-    event.preventDefault();
-  }
-
-  if (event.key === "Enter") {
-    console.log("Enter pressed");
-  }
+function moveChickenLane() {
+  gameState.chickenLane = (gameState.chickenLane + 1)
+  console.log(gameState.chickenLane)
 }

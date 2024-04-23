@@ -104,18 +104,19 @@ main {
 
 main section#game-container {
   width: 100%;
-  border-radius: 12px 12px 0 0;
+  border-radius: 32px 32px 0 0;
   height: 100%;
   scrollbar-width: none;
   user-select: none;
   overflow: hidden;
   flex: 1;
+  padding: 0;
 }
 
 main section.bet-control {
   display: flex;
   min-height: 20vh;
-  border-radius: 0 0 12px 12px;
+  border-radius: 0 0 32px 32px;
 }
 
 main section.bet-control div.section-controller {
