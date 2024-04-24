@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="/styles/base.css" />
   <link rel="stylesheet" href="/styles/style.css" />
   <link rel="stylesheet" href="/styles/fonts.css" />
-  <link rel="stylesheet" href="/styles/form.css" />
+  <link rel="stylesheet" href="/styles/leaderboard.css" />
   <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico" />
 </head>
 
@@ -34,14 +34,13 @@
   </header>
 
   <main>
-    <section id="register-container" class="container">
-      <h2 id="title-container"></h2>
-      <table class="leaderboard" onclick="changeLeaderboard()">
-        <tbody id="leaderboard-content">
-        </tbody>
-        <tfoot id="personal">
-        </tfoot>
-      </table>
+    <section id="leaderboard-container" onclick="changeLeaderboard()" class="container">
+      <h2 id="title-container" style="display: block;" best-score="true">Leaderboard (HighScore)</h2>
+      <h2 id="title-container" style="display: none;" money="true">Leaderboard (Rich)</h2>
+      <div class="leaderboard">
+        <div class="board" id="board-score"></div>
+        <div class="personal" id="personal-score"></div>
+      </div>
     </section>
   </main>
 </body>

@@ -1,3 +1,45 @@
-tfoot#personal {
+main section#leaderboard-container {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 80vh;
+  text-align: center;
+  padding: 20px;
+}
+
+main section#leaderboard-container h2#title-container {
+  font-weight: bold;
+  font-size: 1.5em;
+  margin: 0;
+  padding: 0;
+}
+
+main section#leaderboard-container div#leaderboard {
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+  user-select: none;
+  display: flex;
+  padding: 0;
+}
+
+main section#leaderboard-container div#leaderboard div.board {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+
+main section#leaderboard-container div#leaderboard div.board div {
+  display: inline;
+}
+
+
+
+main section#leaderboard-container div#leaderboard div.personal {
+  position: absolute;
+  bottom: 0;
   color: rgb(255, 234, 47);
+}
+
+main section#leaderboard-container div#leaderboard::-webkit-scrollbar {
+  display: none;
 }

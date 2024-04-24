@@ -1,81 +1,56 @@
-const current = 0;
-const leaderboard = document.getElementById('leaderboard');
-const leaderboardContent = document.getElementById('leaderboard-content');
-const personal = document.getElementById('personal');
-
+const board = document.getElementById('board-score');
+const personal = document.getElementById('personal-score');
+var boardType = "bestScore";
 
 async function getLeaderboard(type) {
   if (type !== "bestScore" && type !== "money") return;
-
   const response = await fetch('/api/leaderboard/' + type);
   const data = await response.json();
   return data;
 }
 
 async function displayLeaderboard(type) {
-  clearLeaderboard();
 
   const data = await getLeaderboard(type);
-  // leaderboard.textContent = type;
-
-  document.getElementById('title-container').innerText = "Leaderboard - " + (type == "bestScore" ? "Best Score" : "Money");
+  clearLeaderboard();
 
   for (const e of data.leaderboard) {
-    const row = document.createElement('tr');
-    const nameCell = document.createElement('td');
-    const scoreCell = document.createElement('td');
+    const row = document.createElement('div');
+    const nameCell = document.createElement('div');
+    nameCell.className = 'namecell';
+    const scoreCell = document.createElement('div');
+    scoreCell.className = 'scorecell';
 
     nameCell.textContent = e.name;
-    scoreCell.textContent = e[type];
+    scoreCell.textContent = e[type].toFixed(2);
 
     row.appendChild(nameCell);
     row.appendChild(scoreCell);
+    row.classList.add('board-row')
 
-    leaderboardContent.appendChild(row);
-  }
-
-  try {
-    const user = await fetch('/api/me');
-    const userData = await user.json();
-
-    const userRow = document.createElement('tr');
-    const userNameCell = document.createElement('td');
-    const userScoreCell = document.createElement('td');
-
-    userNameCell.textContent = userData.data.name;
-    userScoreCell.textContent = userData.data[type];
-
-    userRow.appendChild(userNameCell);
-    userRow.appendChild(userScoreCell);
-
-    personal.appendChild(userRow);
-  } catch (error) {
-    console.log(error);
+    board.appendChild(row);
   }
 }
 
 function clearLeaderboard() {
-  while (leaderboardContent.firstChild) {
-    leaderboardContent.removeChild(leaderboardContent.firstChild);
-  }
-  while (personal.firstChild) {
-    personal.removeChild(personal.firstChild);
-  }
+  board.replaceChildren();
 }
 
 function changeLeaderboard() {
-  const totalState = 2;
-
-  if (current % totalState === 0) {
-    displayLeaderboard('bestScore');
-    current++;
-  } else if (current % totalState === 1) {
-    displayLeaderboard('money');
-    current++;
+  if (boardType === "bestScore") {
+    boardType = "money";
   }
-  if (current === totalState) {
-    current = 0;
+  else {
+    boardType = "bestScore";
   }
+  if (boardType === 'bestScore') {
+    document.querySelector('[best-score="true"]').style.display = 'block';
+    document.querySelector('[money="true"]').style.display = 'none';
+  } else {
+    document.querySelector('[best-score="true"]').style.display = 'none';
+    document.querySelector('[money="true"]').style.display = 'block';
+  }
+  displayLeaderboard(boardType);
 }
 
 
@@ -98,6 +73,21 @@ async function loadProfile() {
     document.querySelector(
       `header div.user-action div[login="false"]`,
     ).style.display = "none";
+
+    personal.replaceChildren();
+
+    const personalName = document.createElement('div');
+    personalName.classList.add('namecell');
+    personalName.classList.add('personalcell')
+    personalName.textContent = data.name;
+    personal.appendChild(personalName);
+
+    const personalScore = document.createElement('div');
+    personalScore.classList.add('scorecell');
+    personalScore.classList.add('personalcell')
+    personalScore.textContent = data[boardType].toFixed(2);
+    personal.appendChild(personalScore);
+
   } else {
     document.querySelector(
       `header div.user-action div[login="false"]`,
@@ -110,9 +100,9 @@ async function loadProfile() {
 
 document.addEventListener("DOMContentLoaded", function () {
   loadProfile();
-  displayLeaderboard('bestScore');
+  displayLeaderboard(boardType);
   setInterval(() => {
-    displayLeaderboard('bestScore');
+    displayLeaderboard(boardType);
     loadProfile();
   }, 10000);
 });
