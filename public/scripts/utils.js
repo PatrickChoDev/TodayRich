@@ -129,22 +129,22 @@ async function loadProfile() {
     credentials: "same-origin",
   });
   if (response.status === 200) {
-    const data = await response.json();
-    userState.balance = data.balance;
-    userState.username = data.username;
+    const { data } = await response.json();
+    userState.balance = data.money;
+    userState.username = data.name;
     userState.loggedIn = true;
     document.querySelector(
       `header div.user-action div[login="true"] p#username`,
     ).innerText = userState.username;
     document.querySelector(
       `header div.user-action div[login="true"] p#balance`,
-    ).innerText = userState.balance;
+    ).innerText = `$ ${userState.balance}`;
     document.querySelector(
       `header div.user-action div[login="true"]`,
     ).style.display = "flex";
     document.querySelector(
       `header div.user-action div[login="false"]`,
-    ).style.display = "true";
+    ).style.display = "none";
   } else {
     userState.loggedIn = false;
     document.querySelector(
@@ -163,11 +163,20 @@ async function loadGame() {
   });
   if (response.status === 200) {
     const data = await response.json();
-    gameState = data.gameState;
-    objectState = data.objectState;
+    console.log(data);
+    gameState.level = data.level;
+    document.getElementById('bet-amount').value = data.bet;
+    for (var i = 1; i <= 15; i++) {
+      const mulText = document.querySelector(
+        `[lane="${i}"] [game-class="mul-text"]`,
+      );
+      mulText.innerText = `x${1 + i * data.multiplier}`;
+    }
     setLevel(gameState.level);
     setActiveLane(gameState.chickenLane + 1);
     transformXGameView();
+    gameState.isPlaying = true;
+    updateUIButton()
   }
 }
 
@@ -182,7 +191,8 @@ async function handleMoveBet() {
 }
 
 async function handleStartBet() {
-  const bet = document.getElementById("bet").value;
+  const bet = document.getElementById("bet-amount").value;
+  console.log(bet)
   if (parseFloat(bet) <= 0) {
     alert("Please enter a valid bet amount");
     return;
@@ -196,19 +206,18 @@ async function handleStartBet() {
   });
 
   const data = await response.json();
-  if (response.status === 400) {
+  if (response.status === 200) {
+    loadProfile();
+  }
+  else if (response.status === 400) {
     alert(data.error);
     return;
   } else if (response.status === 401) {
     window.location.replace("/login");
     return;
   }
+  updateUIButton();
 
-  const startBetButton = document.getElementById("btn-start");
-  startBetButton.style.display = "none";
-  const stopBetButton = document.getElementById("btn-stop");
-  stopBetButton.style.display = "block";
-  gameState.isPlaying = true;
 }
 
 async function handleStopBet() {
@@ -221,12 +230,8 @@ async function handleStopBet() {
     window.location.replace("/login");
     return;
   }
-
-  const startBetButton = document.getElementById("btn-start");
-  startBetButton.style.display = "block";
-  const stopBetButton = document.getElementById("btn-stop");
-  stopBetButton.style.display = "none";
   gameState.isPlaying = false;
+  updateUIButton()
 }
 
 async function handleLogout() {
@@ -238,5 +243,17 @@ async function handleLogout() {
     location.reload();
   } else {
     alert("Failed to logout");
+  }
+}
+
+function updateUIButton() {
+  const startBetButton = document.getElementById("btn-start");
+  const stopBetButton = document.getElementById("btn-stop");
+  if (gameState.isPlaying) {
+    startBetButton.style.display = "none";
+    stopBetButton.style.display = "block";
+  } else {
+    startBetButton.style.display = "block";
+    stopBetButton.style.display = "none";
   }
 }

@@ -26,13 +26,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       body: JSON.stringify({ username, password }),
     });
     if (response.ok) {
-      const data = await response.json();
-      console.log(data);
       alert("Account created successfully");
       window.location.replace("/game");
     } else {
       const { error } = await response.json();
-      alert(error);
+      document.getElementById("error-message").innerText = error;
     }
   });
 });
