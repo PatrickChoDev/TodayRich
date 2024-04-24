@@ -57,7 +57,7 @@ export const startGame = async (req, res) => {
       won: false,
       ended: false,
       step: 0,
-      endStep: Math.max(0, Math.random() * 16),
+      endStep: Math.floor(Math.max(0, Math.random() * 16)),
     });
 
     user.money -= req.body.bet;
@@ -96,7 +96,8 @@ export const playGame = async (req, res) => {
       game.ended = true;
       game.won = true;
       game.score += game.bet * game.multiplier * game.step;
-      user.money += game.bet * (1 + game.multiplier * game.step);
+      game.earn = game.bet * (1 + game.multiplier * game.step);
+      user.money += game.earn;
       user.bestScore = Math.max(user.bestScore, game.score) || 0;
       await user.save();
       await game.save();
@@ -107,6 +108,7 @@ export const playGame = async (req, res) => {
       // Game Finished with lose
       game.ended = true;
       game.won = false;
+      game.earn = 0;
       user.bestScore = Math.max(user.bestScore, game.score) || 0;
       await user.save();
       await game.save();
@@ -147,7 +149,8 @@ export const stopGame = async (req, res) => {
     game.ended = true;
     game.won = false;
     const user = await User.findById(game.user);
-    user.money += game.bet * (1 + game.multiplier * game.step);
+    game.earn = game.bet * (1 + game.multiplier * game.step);
+    user.money += game.earn;
     user.bestScore = Math.max(user.bestScore, game.score);
     await user.save();
     await game.save();
@@ -185,4 +188,9 @@ export const loadGame = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Server error" });
   }
+};
+
+
+export const getMultiplier = async (req, res) => {
+  res.status(200).json({ success: true, multiplier: levelMultiplier[req.params.level] });
 };

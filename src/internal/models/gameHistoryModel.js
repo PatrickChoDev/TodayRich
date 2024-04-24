@@ -14,6 +14,9 @@ const GameHistorySchema = new mongoose.Schema({
     type: mongoose.SchemaTypes.Number,
     required: true,
   },
+  earn: {
+    type: mongoose.SchemaTypes.Number,
+  },
   multiplier: {
     type: mongoose.SchemaTypes.Number,
     required: true,

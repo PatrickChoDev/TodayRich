@@ -4,7 +4,7 @@ let gameState = {
   carGenerationTime: 400,
   carFrequency: 0.95,
   level: "easy",
-  isPlaying: true,
+  isPlaying: false,
   isWaiting: false,
 };
 
@@ -39,7 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
   setActiveLane(1);
   loadProfile();
   loadGame();
-  window.scrollTo(0, 1);
   setTimeout(() => {
     loadProfile();
   }, 10000);
@@ -70,43 +69,15 @@ function moveChickenLane() {
       objectState.chicken.style.transition =
         "transform cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s";
     }, 300);
-
-  setTimeout(() => setDead(gameState.chickenLane === 3), 400);
-
-  setActiveLane(gameState.chickenLane + 1);
   transformXGameView();
 }
 
 function moveToNextPipe() {
   if (!gameState.isPlaying || gameState.isWaiting) return;
-  gameState.chickenLane += 1;
   gameState.isWaiting = true;
+  gameState.chickenLane += 1;
   moveChickenLane();
-}
-
-function genCar(lane, numCar) {
-  const car = document.querySelector(
-    `[lane="${lane}"] [game-class="car-wrapper"]`,
-  );
-  car.style.display = "flex";
-  const newCarImage = document.createElement("img");
-  newCarImage.setAttribute("src", `/assets/cars/car${numCar}.svg`);
-  newCarImage.setAttribute("game-class", "car");
-  car.appendChild(newCarImage);
-  newCarImage.animate(
-    [
-      { transform: `translateY(${-car.getBoundingClientRect().height}px)` },
-      { transform: `translateY(${car.getBoundingClientRect().height}px)` },
-    ],
-    {
-      duration: gameState.carScreenTime,
-      iterations: 1,
-      fill: "forwards",
-    },
-  );
-  setTimeout(() => {
-    newCarImage.remove();
-  }, gameState.carScreenTime);
+  handleMoveBet();
 }
 
 function setDead(dead) {
@@ -125,7 +96,9 @@ function setDead(dead) {
       objectState.chicken.parentNode.appendChild(feather);
       gameState.isPlaying = false;
       gameState.isWaiting = false;
+      loadProfile();
     }, gameState.carScreenTime / 2);
+
   } else {
     if (lane) {
       const blockerCrack = document.createElement("img");
@@ -171,5 +144,8 @@ function setDead(dead) {
     coin.setAttribute("game-class", "coin");
     coin.classList.add("coin");
     previousLane.appendChild(coin);
+  }
+  if (gameState.chickenLane == 15 && dead == false) {
+    moveToNextPipe();
   }
 }

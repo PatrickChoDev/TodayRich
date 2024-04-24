@@ -12,6 +12,7 @@ import {
   loadGame,
   getGameHistory,
   playGame,
+  getMultiplier,
 } from "./controllers/gameController.js";
 import { protectedRoute } from "./middlewares/auth.js";
 
@@ -31,6 +32,7 @@ route.get("/logout", protectedRoute, logout);
 route.post("/game/start", protectedRoute, startGame);
 route.post("/game/stop", protectedRoute, stopGame);
 route.get("/game", protectedRoute, loadGame);
+route.get("/game/multiplier/:level", protectedRoute, getMultiplier);
 route.get("/game/history", protectedRoute, getGameHistory);
 route.get("/game/play", protectedRoute, playGame);
 

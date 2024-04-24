@@ -1,4 +1,5 @@
 function handleBetInput(event) {
+  if (gameState.isPlaying) return;
   if (event.key === "-" || event.key === "+" || event.key === "e") {
     event.preventDefault();
   }
@@ -26,16 +27,19 @@ function setActiveLane(number) {
     const mulText = document.querySelector(
       `[lane="${i}"] [game-class="mul-text"]`,
     );
+    const car = document.querySelector(`[lane="${i}"] [game-class="car-wrapper"]`);
     if (i === number) {
       pipe.setAttribute("active", "true");
       pipe.addEventListener("click", moveToNextPipe);
       mulText.setAttribute("active", "true");
       mulText.addEventListener("click", moveToNextPipe);
+      car.style.display = "none";
     } else {
       pipe.removeAttribute("active");
       pipe.removeEventListener("click", moveToNextPipe);
       mulText.removeAttribute("active");
       mulText.removeEventListener("click", moveToNextPipe);
+      if (i > number) car.style.display = "flex";
     }
   }
 }
@@ -93,6 +97,7 @@ function transformXGameView() {
 }
 
 function handleLevelChange(element) {
+  if (gameState.isPlaying) return;
   const level = element.getAttribute("value");
   gameState.level = level;
   setLevel(level);
@@ -116,6 +121,7 @@ function setLevel(level) {
     gameState.carGenerationTime = 100;
     gameState.carFrequency = 0.7;
   }
+  updateMultiplier();
 
   document.querySelectorAll("#btn-bet").forEach((e) => {
     if (e.getAttribute("value") !== level) e.removeAttribute("selected");
@@ -130,7 +136,7 @@ async function loadProfile() {
   });
   if (response.status === 200) {
     const { data } = await response.json();
-    userState.balance = data.money;
+    userState.balance = data.money.toFixed(2);
     userState.username = data.name;
     userState.loggedIn = true;
     document.querySelector(
@@ -163,36 +169,74 @@ async function loadGame() {
   });
   if (response.status === 200) {
     const data = await response.json();
-    console.log(data);
     gameState.level = data.level;
+    gameState.chickenLane = data.step;
     document.getElementById('bet-amount').value = data.bet;
-    for (var i = 1; i <= 15; i++) {
-      const mulText = document.querySelector(
-        `[lane="${i}"] [game-class="mul-text"]`,
-      );
-      mulText.innerText = `x${1 + i * data.multiplier}`;
-    }
+    gameState.bet = data.bet;
     setLevel(gameState.level);
     setActiveLane(gameState.chickenLane + 1);
+    moveChickenLane();
     transformXGameView();
+    updateUIButton();
+    for (var i = 1; i <= gameState.chickenLane; i++) {
+      const lane = document.querySelector(
+        `div.item[game-class="lane"][lane="${i}"]`,
+      );
+      lane.querySelector(`[game-class="pipe"]`).style.display = "none";
+      lane.querySelector(`[game-class="mul-text"]`).style.display = "none";
+      if (lane) {
+        const blockerCrack = document.createElement("img");
+        blockerCrack.setAttribute("src", "/assets/images/roadBlock-crack.svg");
+        blockerCrack.setAttribute("game-class", "blocker-crack");
+        lane.appendChild(blockerCrack);
+        const blocker = document.createElement("img");
+        blocker.setAttribute("src", "/assets/images/roadBlock.svg");
+        blocker.setAttribute("game-class", "blocker");
+        lane.appendChild(blocker);
+        blockerCrack.animate(
+          [
+            { transform: "translateY(-55px)" },
+            { transform: "translateY(-60px)" },
+          ],
+          {
+            duration: 200,
+            delay: 100,
+            iterations: 1,
+            fill: "forwards",
+          },
+        );
+        blocker.animate(
+          [
+            { transform: `translateY(-${lane.getBoundingClientRect().y}px)` },
+            { transform: "translateY(-70px)" },
+          ],
+          {
+            duration: 200,
+            iterations: 1,
+            fill: "forwards",
+          },
+        );
+        gameState.isWaiting = false;
+      }
+    }
+    if (gameState.chickenLane - 1 > 0) {
+      const previousLane = document.querySelector(
+        `div.item[game-class="lane"][lane="${gameState.chickenLane - 1}"]`,
+      );
+      const coin = document.createElement("img");
+      coin.setAttribute("src", "/assets/images/coin.svg");
+      coin.setAttribute("game-class", "coin");
+      coin.classList.add("coin");
+      previousLane.appendChild(coin);
+    }
     gameState.isPlaying = true;
-    updateUIButton()
   }
+  updateUIButton();
 }
 
-async function handleMoveBet() {
-  const response = await fetch("/api/game/spin", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  console.log(await response.json());
-}
 
 async function handleStartBet() {
   const bet = document.getElementById("bet-amount").value;
-  console.log(bet)
   if (parseFloat(bet) <= 0) {
     alert("Please enter a valid bet amount");
     return;
@@ -206,8 +250,9 @@ async function handleStartBet() {
   });
 
   const data = await response.json();
-  if (response.status === 200) {
-    loadProfile();
+  console.log(data)
+  if (response.ok) {
+    window.location.reload();
   }
   else if (response.status === 400) {
     alert(data.error);
@@ -216,8 +261,31 @@ async function handleStartBet() {
     window.location.replace("/login");
     return;
   }
-  updateUIButton();
+}
 
+async function handleMoveBet() {
+  setTimeout(() => {
+    const response = fetch("/api/game/play", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    response.then((data) => {
+      data.json().then((data) => {
+        if (data.game.ended) {
+          setDead(true);
+          gameState.isPlaying = false;
+          updateUIButton();
+        } else {
+          setDead(false);
+          gameState.isPlaying = true;
+          setActiveLane(gameState.chickenLane + 1);
+        }
+        gameState.isWaiting = false;
+      });
+    });
+  }, 400);
 }
 
 async function handleStopBet() {
@@ -232,6 +300,8 @@ async function handleStopBet() {
   }
   gameState.isPlaying = false;
   updateUIButton()
+  alert(`You earned $${data.earn.toFixed(2)}`)
+  loadProfile();
 }
 
 async function handleLogout() {
@@ -256,4 +326,45 @@ function updateUIButton() {
     startBetButton.style.display = "block";
     stopBetButton.style.display = "none";
   }
+}
+
+async function updateMultiplier() {
+  const response = fetch(`/api/game/multiplier/${gameState.level}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const multiplier = (await (await response).json()).multiplier;
+  for (var i = 1; i <= 15; i++) {
+    const mulText = document.querySelector(
+      `[lane="${i}"] [game-class="mul-text"]`,
+    );
+    mulText.innerText = `x${(1 + i * multiplier).toFixed(2)}`;
+  }
+}
+
+function genCar(lane, numCar) {
+  const car = document.querySelector(
+    `[lane="${lane}"] [game-class="car-wrapper"]`,
+  );
+  car.style.display = "flex";
+  const newCarImage = document.createElement("img");
+  newCarImage.setAttribute("src", `/assets/cars/car${numCar}.svg`);
+  newCarImage.setAttribute("game-class", "car");
+  car.appendChild(newCarImage);
+  newCarImage.animate(
+    [
+      { transform: `translateY(${-car.getBoundingClientRect().height}px)` },
+      { transform: `translateY(${car.getBoundingClientRect().height}px)` },
+    ],
+    {
+      duration: gameState.carScreenTime,
+      iterations: 1,
+      fill: "forwards",
+    },
+  );
+  setTimeout(() => {
+    newCarImage.remove();
+  }, gameState.carScreenTime);
 }
