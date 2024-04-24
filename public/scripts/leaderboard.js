@@ -3,6 +3,7 @@ const leaderboard = document.getElementById('leaderboard');
 const leaderboardContent = document.getElementById('leaderboard-content');
 const personal = document.getElementById('personal');
 
+
 async function getLeaderboard(type) {
   if (type !== "bestScore" && type !== "money") return;
 
@@ -77,4 +78,40 @@ function changeLeaderboard() {
   }
 }
 
-displayLeaderboard('bestScore');
+
+async function loadProfile() {
+  const response = await fetch("/api/me", {
+    method: "GET",
+    credentials: "same-origin",
+  });
+  if (response.status === 200) {
+    const { data } = await response.json();
+    document.querySelector(
+      `header div.user-action div[login="true"] p#username`,
+    ).innerText = data.name;
+    document.querySelector(
+      `header div.user-action div[login="true"] p#balance`,
+    ).innerText = `$ ${data.money.toFixed(2)}`;
+    document.querySelector(
+      `header div.user-action div[login="true"]`,
+    ).style.display = "flex";
+    document.querySelector(
+      `header div.user-action div[login="false"]`,
+    ).style.display = "none";
+  } else {
+    document.querySelector(
+      `header div.user-action div[login="false"]`,
+    ).style.display = "flex";
+    document.querySelector(
+      `header div.user-action div[login="true"]`,
+    ).style.display = "none";
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  loadProfile();
+  setInterval(() => {
+    loadProfile();
+    displayLeaderboard('bestScore');
+  }, 10000);
+});
