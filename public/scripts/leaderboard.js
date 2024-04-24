@@ -1,4 +1,4 @@
-const current = 0;
+let current = 0;
 const leaderboard = document.getElementById('leaderboard');
 const leaderboardContent = document.getElementById('leaderboard-content');
 const personal = document.getElementById('personal');
