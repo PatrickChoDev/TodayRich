@@ -1,0 +1,42 @@
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TodayRich - Register</title>
+  <link rel="stylesheet" href="/styles/base.css" />
+  <link rel="stylesheet" href="/styles/style.css" />
+  <link rel="stylesheet" href="/styles/fonts.css" />
+  <link rel="stylesheet" href="/styles/form.css" />
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico" />
+</head>
+
+<script src="/scripts/leaderboard.js" defer></script>
+
+<body>
+  <header>
+    <div class="title-container">
+      <h1 class="title">TodayRich - Leaderboard</h1>
+    </div>
+    <div class="user-action">
+      <div class="container">
+        <btn class="btn btn-secondary"><a href="/login"> Login </a></btn>
+        <btn class="btn btn-primary"><a href="/register"> Register </a></btn>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="register-container" class="container">
+      <h2 class="title"></h2>
+      <table class="leaderboard" onclick="changeLeaderboard()">
+        <tbody id="leaderboard-content">
+        </tbody>
+        <tfoot id="personal">
+        </tfoot>
+      </table>
+    </section>
+  </main>
+</body>
+
+</html>
