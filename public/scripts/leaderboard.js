@@ -16,9 +16,9 @@ async function displayLeaderboard(type) {
   clearLeaderboard();
 
   const data = await getLeaderboard(type);
-  leaderboard.textContent = type;
+  // leaderboard.textContent = type;
 
-  document.getElementById('title').innerHTML = "Leaderboard - " + type === "bestScore" ? "Best Score" : "Money";
+  document.getElementById('title-container').innerText = "Leaderboard - " + (type == "bestScore" ? "Best Score" : "Money");
 
   for (const e of data.leaderboard) {
     const row = document.createElement('tr');
@@ -110,8 +110,9 @@ async function loadProfile() {
 
 document.addEventListener("DOMContentLoaded", function () {
   loadProfile();
+  displayLeaderboard('bestScore');
   setInterval(() => {
-    loadProfile();
     displayLeaderboard('bestScore');
+    loadProfile();
   }, 10000);
 });
